@@ -18,20 +18,14 @@ import urllib2
 import hmac
 import hashlib
 
-
-# Some variables for easy access
-HOST = "palvain"
-PORT = 6667
-NICK = "nikki"
-CHAN = "!kanava"
+from config import *
 
 swear_words = [
-  "voivoi",
+  "vittu", "saatana", "perkele", "helvetti", "jumalauta", "kulli", "pillu", "paska",
 ]
 
 def re_replace_swearwords(match):
 	return random.choice(swear_words)
-
 
 annoyed_replies = [
   "samat kuin äskenkin",
@@ -46,7 +40,11 @@ annoyed_replies = [
 ]
 
 swearing_replies = [
-  "nyt hiljaa hemmetti",
+  "turpa kiinni, helvetin saatana",
+  "mutsisko sut opetti kiroilemaan?",
+  "vähän kohteliaammin, kiitos",
+  "älä oo noin pälli",
+  "nii, vittu!",
 ]
 
 greetings = [
@@ -63,7 +61,7 @@ people_present = set()
 people_present_last_set = people_present
 people_present_last_time = time.time()
 people_present_regex = re.compile("(<.*?>\s+?)?((kes|kuka|ket(ä|äs|än)|ke(it|tk)ä(hän)?|joku|ehkä|varmaan(kin)?|onko?s?)\s+.*)?(paikal(la)?|(ele)?pajal(la)?|läsnä|pajautt(ama|ele)[msae]+)\s*?\?\s*$", flags=re.IGNORECASE)
-swearwords_regex = re.compile(".*(hemmetti).*", flags=re.IGNORECASE)
+swearwords_regex = re.compile(".*(vi(tt|dd)u|vi[dt]un|perkele|saatana|kuradi|helvett?i|jumalau[td]|kyr[pv]ä|pillu|paska|perse|runkk|homo|kusi?pä).*", flags=re.IGNORECASE)
 nick_and_rest_regex = re.compile("^" + NICK + "[:,]\s*?(.*)", flags=re.IGNORECASE)
 
 
@@ -297,7 +295,7 @@ while True:
         message_extra = ", paikalla %s" % door_opener
 	subprocess.call("aplay tada.wav", shell=True)
 	if door_opener == "":
-          irc_say(sock, CHAN, "Eräs: pliis korjatkaa tää")
+          irc_say(sock, CHAN, "Olen rikki.")
 	else:
           people_present.add(door_opener)  # Add door opener to set
     else:
@@ -321,6 +319,6 @@ while True:
     #Send info to elepaja.aalto.fi pubsub. Authentication using php script and hmac-sha256 hash (hash from $id$message$time).
     # Don't send since it lacks exception handling and kills the bot on failure.
     #time_str = str(int(time.time()))
-    #dig = hmac.new(b'harharhar', msg="pajaovi" + message + time_str, digestmod=hashlib.sha256).hexdigest()
+    #dig = hmac.new(b'INSERT_YOUR_SECRET_HERE', msg="pajaovi" + message + time_str, digestmod=hashlib.sha256).hexdigest()
     #resp = urllib2.urlopen("http://elepaja.aalto.fi/push/update.php?id=pajaovi&time=" + time_str + "&hash=" + dig + "&status=" + message ).read()
 
